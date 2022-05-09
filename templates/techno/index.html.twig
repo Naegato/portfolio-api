@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TechnoController!{% endblock %}
+
+{% block body %}
+    {% if technos is defined and technos is not empty %}
+        {% for techno in technos%}
+            <div>
+                <h1>
+                    {{ techno.name }}
+                </h1>
+                {% if techno.image is defined and techno.image is not empty %}
+                    <img src="{{asset(techno.image.path)}}" alt="img"/>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

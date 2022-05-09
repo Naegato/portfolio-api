@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Project Insertion{% endblock %}
+
+{% block body %}
+    <div class="m-5">
+        <h1 class="mb-3">
+            Insertion
+        </h1>
+        <div class="mb-5">
+{#            {{ form_start(form) }}#}
+
+{#                {{ form_row(form.submit, { 'label': 'Submit me' }) }}#}
+{#            {{ form_end(form) }}#}
+            {{form(form, {'attr': {'class': 'd-flex flex-wrap justify-content-around'}})}}
+        </div>
+    </div>
+{% endblock %}
