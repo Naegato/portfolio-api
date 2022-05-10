@@ -17,9 +17,7 @@ class ProjectModificationType extends AbstractType
             ->add('dateStart')
             ->add('dateEnd')
             ->add('duration')
-            ->add('overview')
-            ->add('technos')
-            ->add('tools')
+            ->add('overviewTemp')
         ;
     }
 

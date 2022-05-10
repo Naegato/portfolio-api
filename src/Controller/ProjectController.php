@@ -29,7 +29,19 @@ class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Code
+            $technos = $form->get('technosTemp')->getData();
+            foreach ($technos as $techno) {
+                if ($techno !== null) {
+                    $project->addTechno($techno);
+                }
+            }
+            $tools = $form->get('toolsTemp')->getData();
+            foreach ($tools as $tool) {
+                if ($tool !== null) {
+                    $project->addTool($tool);
+                }
+            }
+            dd($project);
         }
 
         return $this->render('project/insert.html.twig', [

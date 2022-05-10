@@ -6,6 +6,8 @@ use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -24,6 +26,7 @@ class Project
     #[ORM\OneToOne(targetEntity: File::class, cascade: ['persist', 'remove'])]
     private $overview;
 
+    #[Assert\Image]
     private $overviewTemp;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: ProjectImage::class, orphanRemoval: true)]
@@ -41,8 +44,12 @@ class Project
     #[ORM\ManyToMany(targetEntity: Techno::class, inversedBy: 'projects')]
     private $technos;
 
+    private $technosTemp;
+
     #[ORM\ManyToMany(targetEntity: Tool::class, inversedBy: 'projects')]
     private $tools;
+
+    private $toolsTemp;
 
     public function __construct()
     {
@@ -68,6 +75,18 @@ class Project
         return $this;
     }
 
+    public function getOverviewTemp()
+    {
+        return $this->overviewTemp;
+    }
+
+    public function setOverviewTemp($overviewTemp): self
+    {
+        $this->overviewTemp = $overviewTemp;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -88,6 +107,30 @@ class Project
     public function setOverview(?file $overview): self
     {
         $this->overview = $overview;
+
+        return $this;
+    }
+
+    public function getTechnosTemp()
+    {
+        return $this->technosTemp;
+    }
+
+    public function setTechnosTemp($technosTemp): self
+    {
+        $this->technosTemp = $technosTemp;
+
+        return $this;
+    }
+
+    public function getToolsTemp()
+    {
+        return $this->toolsTemp;
+    }
+
+    public function setToolsTemp($toolsTemp): self
+    {
+        $this->toolsTemp = $toolsTemp;
 
         return $this;
     }

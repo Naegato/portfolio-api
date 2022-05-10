@@ -6,6 +6,8 @@ use App\Repository\ToolRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ToolRepository::class)]
 class Tool
@@ -24,6 +26,9 @@ class Tool
     #[ORM\OneToOne(targetEntity: File::class, cascade: ['persist', 'remove'])]
     private $image;
 
+    #[Assert\Image]
+    private $imageTemp;
+
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'tools')]
     private $projects;
 
@@ -35,6 +40,18 @@ class Tool
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getImageTemp()
+    {
+        return $this->imageTemp;
+    }
+
+    public function setImageTemp($imageTemp): self
+    {
+        $this->imageTemp = $imageTemp;
+
+        return $this;
     }
 
     public function getName(): ?string

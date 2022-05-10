@@ -13,10 +13,12 @@ class DefaultController extends AbstractController
     {
         return $this->render('default/index.html.twig', [
             'route' => [
-                'Project List' => 'app_project',
+                'Projects List' => 'app_project',
                 'Project Insertion' => 'app_project_insertion',
-                'Techno List' => 'app_techno',
+                'Technos List' => 'app_techno',
                 'Techno Insertion' => 'app_techno_insertion',
+                'Tools List' => 'app_tool',
+                'Tool Insertion' => 'app_tool_insertion',
             ],
         ]);
     }

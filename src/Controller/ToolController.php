@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\File;
 use App\Entity\Techno;
+use App\Entity\Tool;
 use App\Form\TechnoType;
-use App\Repository\TechnoRepository;
+use App\Form\ToolType;
+use App\Repository\ToolRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -14,22 +16,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-#[Route('/techno')]
-class TechnoController extends AbstractController
+#[Route('/tool')]
+class ToolController extends AbstractController
 {
-    #[Route('/', name: 'app_techno')]
-    public function index(TechnoRepository $technoRepository): Response
+    #[Route('/', name: 'app_tool')]
+    public function index(ToolRepository $toolRepository): Response
     {
-        return $this->render('techno/index.html.twig', [
-            'technos' => $technoRepository->findAll(),
+        return $this->render('tool/index.html.twig', [
+            'tools' => $toolRepository->findAll(),
         ]);
     }
 
-    #[Route('/insertion',name: 'app_techno_insertion')]
+    #[Route('/insertion',name: 'app_tool_insertion')]
     public function technoInsertion(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger): Response {
 
-        $techno = new Techno();
-        $form =$this->createForm(TechnoType::class, $techno);
+        $tool = new Tool();
+        $form =$this->createForm(ToolType::class, $tool);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -58,16 +60,16 @@ class TechnoController extends AbstractController
                 $image->setPath('uploads/'.$newFilename);
 
 //                dd($image);
-                $techno->setImage($image);
+                $tool->setImage($image);
             }
-            $entityManager->persist($techno);
+            $entityManager->persist($tool);
             $entityManager->flush();
-            return $this->redirectToRoute('app_techno');
+            return $this->redirectToRoute('app_tool');
         }
 
 //        dd($form->createView());
 
-        return  $this->render('techno/insert.html.twig', [
+        return  $this->render('tool/insert.html.twig', [
             'form' => $form->createView()
         ]);
     }

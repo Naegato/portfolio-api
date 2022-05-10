@@ -3,16 +3,18 @@
 {% block title %}Hello TechnoController!{% endblock %}
 
 {% block body %}
-    {% if technos is defined and technos is not empty %}
-        {% for techno in technos%}
-            <div>
-                <h1>
-                    {{ techno.name }}
-                </h1>
-                {% if techno.image is defined and techno.image is not empty %}
-                    <img src="{{asset(techno.image.path)}}" alt="img"/>
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% endif %}
+    <div class="row">
+        {% if technos is defined and technos is not empty %}
+            {% for techno in technos%}
+                <div class="col-12 py-5 d-flex justify-content-around align-items-center">
+                    <h1>
+                        {{ techno.name }}
+                    </h1>
+                    {% if techno.image is defined and techno.image is not empty %}
+                        <img class="col-3" src="{{asset(techno.image.path)}}" alt="img"/>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 {% endblock %}

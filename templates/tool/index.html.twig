@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tool List!{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% if tools is defined and tools is not empty %}
+            {% for tool in tools%}
+                <div class="col-12 py-5 d-flex justify-content-around align-items-center">
+                    <h1>
+                        {{ tool.name }} :
+                    </h1>
+                    {% if tool.image is defined and tool.image is not empty %}
+                        <img class="col-3" src="{{asset(tool.image.path)}}" alt="img"/>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
