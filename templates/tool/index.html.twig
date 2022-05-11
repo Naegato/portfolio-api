@@ -3,7 +3,7 @@
 {% block title %}Tool List!{% endblock %}
 
 {% block body %}
-    <div class="row">
+    <div class="flex-row">
         {% if tools is defined and tools is not empty %}
             {% for tool in tools%}
                 <div class="col-12 py-5 d-flex justify-content-around align-items-center">

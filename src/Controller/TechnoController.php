@@ -29,7 +29,7 @@ class TechnoController extends AbstractController
     public function technoInsertion(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger): Response {
 
         $techno = new Techno();
-        $form =$this->createForm(TechnoType::class, $techno);
+        $form = $this->createForm(TechnoType::class, $techno);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

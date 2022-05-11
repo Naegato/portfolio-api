@@ -3,22 +3,24 @@
 {% block title %}Project Insertion{% endblock %}
 
 {% block body %}
-    <div class="m-5">
-        <h1 class="mb-3">
-            Insertion
-        </h1>
-        {{ form_start(form, {'attr': {'class': 'd-flex flex-wrap justify-content-around'}}) }}
-        {% for child in form.children %}
-            {% if child.vars.name != '_token' %}
-                <div class="col-lg-3 m-2 col-md-5 col-12">
-                    {{ form_row(child) }}
-                </div>
-            {%endif%}
-        {% endfor %}
+    {% if form is defined and form is not empty  %}
+        <div class="m-5">
+            <h1 class="mb-3">
+                Insertion
+            </h1>
+            {{ form_start(form, {'attr': {'class': 'd-flex flex-wrap justify-content-around'}}) }}
+            {% for child in form.children %}
+                {% if child.vars.name != '_token' %}
+                    <div class="col-lg-3 m-2 col-md-5 col-12">
+                        {{ form_row(child) }}
+                    </div>
+                {% endif %}
+            {% endfor %}
 
-        <div class="col-12 d-flex justify-content-center">
-            <button class="btn btn-primary px-5" type="submit">Submit</button>
+            <div class="col-12 d-flex justify-content-center">
+                <button class="btn btn-primary px-5" type="submit">Submit</button>
+            </div>
+            {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
-    </div>
+    {% endif %}
 {% endblock %}

@@ -32,6 +32,11 @@ class Project
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: ProjectImage::class, orphanRemoval: true)]
     private $images;
 
+    #[Assert\All([
+        new Assert\Image,
+    ])]
+    private $imagesTemp;
+
     #[ORM\Column(type: 'datetime')]
     private $dateStart;
 
@@ -44,11 +49,17 @@ class Project
     #[ORM\ManyToMany(targetEntity: Techno::class, inversedBy: 'projects')]
     private $technos;
 
+    #[Assert\All([
+        new Assert\Type(Techno::class),
+    ])]
     private $technosTemp;
 
     #[ORM\ManyToMany(targetEntity: Tool::class, inversedBy: 'projects')]
     private $tools;
 
+    #[Assert\All([
+        new Assert\Type(Tool::class),
+    ])]
     private $toolsTemp;
 
     public function __construct()
@@ -71,6 +82,18 @@ class Project
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getImagesTemp()
+    {
+        return $this->imagesTemp;
+    }
+
+    public function setImagesTemp($imagesTemp): self
+    {
+        $this->imagesTemp = $imagesTemp;
 
         return $this;
     }

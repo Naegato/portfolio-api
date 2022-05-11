@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\File;
 use App\Entity\Project;
 use App\Repository\TechnoRepository;
 use App\Repository\ToolRepository;
@@ -15,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProjectInsertionType extends AbstractType
+class ProjectType extends AbstractType
 {
     private TechnoRepository $technoRepository;
 
@@ -46,7 +45,12 @@ class ProjectInsertionType extends AbstractType
             ->add('dateEnd', DateTimeType::class)
             ->add('duration',IntegerType::class)
             ->add('overviewTemp', FileType::class, [
-                'label' => 'Image',
+                'label' => 'Image preview',
+                'required' => false,
+            ])
+            ->add('imagesTemp', FileType::class, [
+                'label' => 'Images',
+                'multiple' => true,
                 'required' => false,
             ])
             ->add('technosTemp', ChoiceType::class, [
