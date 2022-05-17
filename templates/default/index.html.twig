@@ -4,18 +4,8 @@
 
 {% block body %}
 
-    <h1>Index</h1>
-
-    <div>
-
-        {% for row, value in route %}
-
-            <div>
-                <a href="{{path(value)}}">{{row}}</a>
-            </div>
-
-        {% endfor %}
-
+    <div class="container-fluid flex-fill d-flex justify-content-center align-items-center">
+        <h1 class="display-1">Portfolio API</h1>
     </div>
 
 {% endblock %}
