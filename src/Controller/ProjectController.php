@@ -114,4 +114,30 @@ class ProjectController extends AbstractController
            'form' => $form->createView()
         ]);
     }
+
+    #[Route('/modification', name: 'app_project_modification')]
+    public function projectModification(Request $request, SluggerInterface $slugger, EntityManagerInterface $entityManager, ProjectRepository $projectRepository):Response {
+
+        $projectId = intval($request->get('projectId'));
+
+        if ($projectId === 0) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $project = $projectRepository->findById($projectId);
+
+        if ($project === null) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $form = $this->createForm(ProjectType::class, $project);
+        $form->handleRequest($request);
+
+//        dd($project,$form->createView());
+
+        return $this->render('project/modif.html.twig', [
+            'form' => $form->createView(),
+            'project' => $project,
+        ]);
+    }
 }

@@ -5,23 +5,74 @@
 {% block body %}
     <div class="flex-row">
         {% if projects is defined and projects is not empty %}
-            {% for project in projects %}
-                <div class="col-12 py-5 d-flex flex-wrap justify-content-around align-items-center">
-                    <h1>
-                        {{ project.name }}
-                    </h1>
-                    {% if project.overview is defined and project.overview is not empty %}
-                        <img class="col-3" src="{{asset(project.overview.path)}}" alt="img"/>
-                    {% endif %}
-                    <div class="col-12 d-flex flex-wrap">
-                        {% if project.images is defined and project.images is not empty %}
-                            {% for image in project.images %}
-                                <img class="col-3" src="{{asset(image.image.path)}}" alt="img"/>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Project Name</th>
+                    <th scope="col">Project Overview</th>
+                    <th scope="col">Project Description</th>
+                    <th scope="col">Technos</th>
+                    <th scope="col">Tools</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <th scope="row">{{ project.id }}</th>
+                            <td>{{ project.name }}</td>
+                            <td>
+                                <img class="img-fluid" style="max-width: 200px" src="
+                                    {% if project.overview is not null %}
+                                        {{asset(project.overview.path)}}
+                                    {% else %}
+                                        {{asset(imageNull)}}
+                                    {% endif %}
+                                " alt="img"/>
+                            </td>
+                            <td>{{ project.description }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    {% for techno in project.technos %}
+                                        <div class="mx-1">
+                                            <h3>{{ techno.name }}</h3>
+                                            <img class="img-fluid" style="max-width: 200px" src="
+                                            {% if techno.image is not null%}
+                                                {{asset(techno.image.path)}}
+                                            {% else %}
+                                                {{asset(imageNull)}}
+                                            {% endif %}
+                                            " alt="img"/>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-around">
+                                    {% for tool in project.tools %}
+                                        <div class="mx-1">
+                                            <h3>{{ tool.name }}</h3>
+                                            <img class="img-fluid" style="max-width: 200px" src="
+                                            {% if tool.image is not null%}
+                                                {{asset(tool.image.path)}}
+                                            {% else %}
+                                                {{asset(imageNull)}}
+                                            {% endif %}
+                                            " alt="img"/>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td>
+                                <form method="post" action="{{path('app_project_modification')}}">
+                                    <button class="btn btn-primary" type="submit" name="projectId" value="{{ project.id }}">Modifier</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
 {% endblock %}

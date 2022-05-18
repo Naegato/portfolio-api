@@ -62,6 +62,14 @@ class ToolRepository extends ServiceEntityRepository
 //        ;
 //    }
 
+    public function findById(int $id): ?Tool {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.id = :id')
+            ->setParameter('id',$id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    public function findOneBySomeField($value): ?Tool
 //    {
 //        return $this->createQueryBuilder('t')

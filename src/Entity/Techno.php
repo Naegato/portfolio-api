@@ -14,7 +14,7 @@ class Techno
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private int $id;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: 'string', length: 255)]

@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\File;
-use App\Entity\Techno;
 use App\Entity\Tool;
-use App\Form\TechnoType;
 use App\Form\ToolType;
 use App\Repository\ToolRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +26,7 @@ class ToolController extends AbstractController
     }
 
     #[Route('/insertion',name: 'app_tool_insertion')]
-    public function technoInsertion(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger): Response {
+    public function toolInsertion(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger): Response {
 
         $tool = new Tool();
         $form =$this->createForm(ToolType::class, $tool);
@@ -72,5 +70,92 @@ class ToolController extends AbstractController
         return  $this->render('tool/insert.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/modification',name: 'app_tool_modification')]
+    public function toolModification(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger, ToolRepository $toolRepository): Response {
+
+        $toolId = intval($request->get('toolId'));
+
+        if ($toolId === 0) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $tool = $toolRepository->findById($toolId);
+
+        if ($tool === null) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $form =$this->createForm(ToolType::class, $tool);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('imageTemp')->getData();
+
+            if ($file) {
+                if ($tool->getImage() !== null) {
+                    unlink($tool->getImage()->getPath());
+                }
+                $image = new File();
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+
+                $image->setExtension($file->guessExtension());
+                $image->setName($safeFilename);
+                $image->setSize($file->getSize());
+                try {
+                    $file->move(
+                        $this->getParameter('file_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    throw $e;
+                }
+
+                $image->setPath('uploads/'.$newFilename);
+
+                $tool->setImage($image);
+            }
+
+            $entityManager->persist($tool);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_tool');
+        }
+
+        return  $this->render('tool/modif.html.twig', [
+            'tool' => $tool,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/image_delete',name: 'app_tool_modification_image_delete')]
+    public function toolImageDelete(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger, ToolRepository $toolRepository): Response {
+
+        $toolId = intval($request->get('toolId'));
+        $toolImage = $request->get('toolImage');
+
+        if ($toolId === 0) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $tool = $toolRepository->findById($toolId);
+
+        if ($tool->getImage()->getPath() !== $toolImage) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        unlink($toolImage);
+        $tool->setImage(null);
+
+        $entityManager->persist($tool);
+        $entityManager->flush();
+
+        return  $this->redirectToRoute('app_tool_modification', [
+            'toolId' => $tool->getId(),
+        ], 307);
     }
 }

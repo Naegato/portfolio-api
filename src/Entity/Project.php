@@ -15,7 +15,7 @@ class Project
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
@@ -139,9 +139,11 @@ class Project
         return $this->technosTemp;
     }
 
-    public function setTechnosTemp($technosTemp): self
+    public function addTechnosTemp($techno): self
     {
-        $this->technosTemp = $technosTemp;
+        if (!$this->technosTemp->contains($techno)) {
+            $this->technosTemp[] = $techno;
+        }
 
         return $this;
     }
@@ -151,9 +153,25 @@ class Project
         return $this->toolsTemp;
     }
 
-    public function setToolsTemp($toolsTemp): self
+    public function addToolsTemp($tool): self
     {
-        $this->toolsTemp = $toolsTemp;
+        if (!$this->toolsTemp->contains($tool)) {
+            $this->toolsTemp[] = $tool;
+        }
+
+        return $this;
+    }
+
+    public function copyToolsTemp(): self
+    {
+        $this->toolsTemp = $this->tools->toArray();
+
+        return $this;
+    }
+
+    public function copyTechnosTemp(): self
+    {
+        $this->technosTemp = $this->technos->toArray();
 
         return $this;
     }

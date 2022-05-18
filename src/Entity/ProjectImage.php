@@ -11,7 +11,7 @@ class ProjectImage
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private int $id;
 
     #[ORM\OneToOne(targetEntity: File::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]

@@ -71,4 +71,91 @@ class TechnoController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/modification',name: 'app_techno_modification')]
+    public function technoModification(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger, TechnoRepository $technoRepository): Response {
+
+        $technoId = intval($request->get('technoId'));
+
+        if ($technoId === 0) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $techno = $technoRepository->findById($technoId);
+
+        if ($techno === null) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $form =$this->createForm(TechnoType::class, $techno);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('imageTemp')->getData();
+
+            if ($file) {
+                if ($techno->getImage() !== null) {
+                    unlink($techno->getImage()->getPath());
+                }
+                $image = new File();
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+
+                $image->setExtension($file->guessExtension());
+                $image->setName($safeFilename);
+                $image->setSize($file->getSize());
+                try {
+                    $file->move(
+                        $this->getParameter('file_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    throw $e;
+                }
+
+                $image->setPath('uploads/'.$newFilename);
+
+                $techno->setImage($image);
+            }
+
+            $entityManager->persist($techno);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_techno');
+        }
+
+        return  $this->render('techno/modif.html.twig', [
+            'techno' => $techno,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/image_delete',name: 'app_techno_modification_image_delete')]
+    public function technoImageDelete(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger, TechnoRepository $technoRepository): Response {
+
+        $technoId = intval($request->get('technoId'));
+        $technoImage = $request->get('technoImage');
+
+        if ($technoId === 0) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        $techno = $technoRepository->findById($technoId);
+
+        if ($techno->getImage()->getPath() !== $technoImage) {
+            return $this->redirectToRoute('app_default');
+        }
+
+        unlink($technoImage);
+        $techno->setImage(null);
+
+        $entityManager->persist($techno);
+        $entityManager->flush();
+
+        return  $this->redirectToRoute('app_techno_modification', [
+            'technoId' => $techno->getId(),
+        ], 307);
+    }
 }

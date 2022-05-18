@@ -62,6 +62,14 @@ class ProjectRepository extends ServiceEntityRepository
 //        ;
 //    }
 
+    public function findById(int $id): ?Project {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.id = :id')
+            ->setParameter('id',$id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    public function findOneBySomeField($value): ?Project
 //    {
 //        return $this->createQueryBuilder('p')
