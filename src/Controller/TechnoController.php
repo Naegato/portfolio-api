@@ -133,7 +133,7 @@ class TechnoController extends AbstractController
     }
 
     #[Route('/image_delete',name: 'app_techno_modification_image_delete')]
-    public function technoImageDelete(Request $request,EntityManagerInterface $entityManager, SluggerInterface $slugger, TechnoRepository $technoRepository): Response {
+    public function technoImageDelete(Request $request,EntityManagerInterface $entityManager, TechnoRepository $technoRepository): Response {
 
         $technoId = intval($request->get('technoId'));
         $technoImage = $request->get('technoImage');

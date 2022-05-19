@@ -52,7 +52,7 @@ class Project
     #[Assert\All([
         new Assert\Type(Techno::class),
     ])]
-    private $technosTemp;
+    private $technosTemp = [];
 
     #[ORM\ManyToMany(targetEntity: Tool::class, inversedBy: 'projects')]
     private $tools;
@@ -60,7 +60,7 @@ class Project
     #[Assert\All([
         new Assert\Type(Tool::class),
     ])]
-    private $toolsTemp;
+    private $toolsTemp = [];
 
     public function __construct()
     {
@@ -139,10 +139,12 @@ class Project
         return $this->technosTemp;
     }
 
-    public function addTechnosTemp($techno): self
+    public function addTechnosTemp(?Techno $techno): self
     {
-        if (!$this->technosTemp->contains($techno)) {
-            $this->technosTemp[] = $techno;
+        if ($techno !== null) {
+            if (!in_array($techno,$this->technosTemp,true)) {
+                $this->technosTemp[] = $techno;
+            }
         }
 
         return $this;
@@ -153,10 +155,12 @@ class Project
         return $this->toolsTemp;
     }
 
-    public function addToolsTemp($tool): self
+    public function addToolsTemp(?Tool $tool): self
     {
-        if (!$this->toolsTemp->contains($tool)) {
-            $this->toolsTemp[] = $tool;
+        if ($tool !== null) {
+            if (!in_array($tool,$this->toolsTemp,true)) {
+                $this->toolsTemp[] = $tool;
+            }
         }
 
         return $this;
@@ -164,14 +168,14 @@ class Project
 
     public function copyToolsTemp(): self
     {
-        $this->toolsTemp = $this->tools->toArray();
+        $this->toolsTemp = $this->tools->getValues();
 
         return $this;
     }
 
     public function copyTechnosTemp(): self
     {
-        $this->technosTemp = $this->technos->toArray();
+        $this->technosTemp = $this->technos->getValues();
 
         return $this;
     }
@@ -202,6 +206,20 @@ class Project
                 $image->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function removeTechnosTemp(Techno $techno): self
+    {
+        $this->technosTemp->removeElement($techno);
+
+        return $this;
+    }
+
+    public function removeToolsTemp(Tool $tool): self
+    {
+        $this->toolsTemp->removeElement($tool);
 
         return $this;
     }
