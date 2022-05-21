@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetProjectController;
+use App\Controller\GetProjectsController;
+use App\Controller\ProjectController;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +14,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get'=> [
+            'method' => 'GET',
+            'controller' => GetProjectsController::class,
+            'pagination_enabled' => false,
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'method' => 'GET',
+            'controller' => GetProjectController::class,
+        ],
+    ],
+)]
 class Project
 {
     #[ORM\Id]
@@ -212,14 +231,28 @@ class Project
 
     public function removeTechnosTemp(Techno $techno): self
     {
-        $this->technosTemp->removeElement($techno);
+        $array = [];
+        foreach ($this->technosTemp as $tech){
+           if ($techno != $tech) {
+               $array[] = $tech;
+           }
+        }
+
+        $this->technosTemp = $array;
 
         return $this;
     }
 
     public function removeToolsTemp(Tool $tool): self
     {
-        $this->toolsTemp->removeElement($tool);
+        $array = [];
+        foreach ($this->toolsTemp as $too){
+            if ($tool != $too) {
+                $array[] = $too;
+            }
+        }
+
+        $this->toolsTemp = $array;
 
         return $this;
     }

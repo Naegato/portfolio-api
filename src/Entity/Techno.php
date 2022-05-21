@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetTechnoController;
+use App\Controller\GetTechnosController;
 use App\Repository\TechnoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +12,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TechnoRepository::class)]
+
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'method' => 'GET',
+            'controller' => GetTechnosController::class,
+            'pagination_enabled' => false,
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'method' => 'GET',
+            'controller' => GetTechnoController::class,
+        ],
+    ],
+)]
+
 class Techno
 {
     #[ORM\Id]

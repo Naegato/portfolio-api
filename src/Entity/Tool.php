@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetToolController;
+use App\Controller\GetToolsController;
 use App\Repository\ToolRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +13,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ToolRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'method' => 'GET',
+            'controller' => GetToolsController::class,
+            'pagination_enabled' => false,
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'method' => 'GET',
+            'controller' => GetToolController::class,
+        ],
+    ],
+)]
 class Tool
 {
     #[ORM\Id]

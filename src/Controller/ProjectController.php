@@ -309,4 +309,8 @@ class ProjectController extends AbstractController
         ], 307);
     }
 
+    static public function getProject(int $id): int {
+        return $id;
+    }
+
 }
