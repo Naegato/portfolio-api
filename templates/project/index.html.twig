@@ -10,6 +10,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Project Name</th>
+                    <th scope="col">Project Dates</th>
                     <th scope="col">Project Overview</th>
                     <th scope="col">Project Description</th>
                     <th scope="col">Project Images</th>
@@ -25,7 +26,17 @@
 {#                        {% endif %}#}
                         <tr>
                             <th scope="row">{{ project.id }}</th>
-                            <td>{{ project.name }}</td>
+                            <td><p>{{ project.name }}</p></td>
+                            <td>
+                                <p>Début : {{ project.dateStart|date("d M Y") }}</p>
+                                <p>
+                                    {% if project.dateEnd is null %}
+                                        En cours
+                                    {% else %}
+                                        Fin : {{ project.dateEnd|date("d M Y") }}
+                                    {% endif %}
+                                </p>
+                            </td>
                             <td>
                                 <div class="container-fluid h-100 w-100 d-flex align-items-center">
                                     <img class="img-fluid" style="max-width: 50px;max-height: 50px;" src="

@@ -96,6 +96,7 @@ class ToolController extends AbstractController
             if ($file) {
                 if ($tool->getImage() !== null) {
                     unlink($tool->getImage()->getPath());
+                    $entityManager->remove($tool->getImage());
                 }
                 $image = new File();
                 $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -149,6 +150,7 @@ class ToolController extends AbstractController
         }
 
         unlink($toolImage);
+        $entityManager->remove($tool->getImage());
         $tool->setImage(null);
 
         $entityManager->persist($tool);

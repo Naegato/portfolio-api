@@ -96,6 +96,7 @@ class TechnoController extends AbstractController
             if ($file) {
                 if ($techno->getImage() !== null) {
                     unlink($techno->getImage()->getPath());
+                    $entityManager->remove($techno->getImage());
                 }
                 $image = new File();
                 $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -149,6 +150,7 @@ class TechnoController extends AbstractController
         }
 
         unlink($technoImage);
+        $entityManager->remove($techno->getImage());
         $techno->setImage(null);
 
         $entityManager->persist($techno);

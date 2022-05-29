@@ -3,29 +3,24 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\GetTechnoController;
-use App\Controller\GetTechnosController;
 use App\Repository\TechnoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TechnoRepository::class)]
 
 #[ApiResource(
+    normalizationContext: ['groups' => ['read:techno']],
     collectionOperations: [
         'get' => [
-            'method' => 'GET',
-            'controller' => GetTechnosController::class,
             'pagination_enabled' => false,
         ],
     ],
     itemOperations: [
-        'get' => [
-            'method' => 'GET',
-            'controller' => GetTechnoController::class,
-        ],
+        'get',
     ],
 )]
 
@@ -34,27 +29,33 @@ class Techno
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:project','read:techno'])]
     private int $id;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:project','read:techno'])]
     private $name;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: 'text')]
+    #[Groups(['read:project','read:techno'])]
     private $description;
 
     #[ORM\Column(type: 'integer')]
     #[Assert\PositiveOrZero]
+    #[Groups(['read:project','read:techno'])]
     private $mastery;
 
     #[ORM\OneToOne(targetEntity: File::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:project','read:techno'])]
     private $image;
 
     #[Assert\Image]
     private $imageTemp;
 
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'technos')]
+    #[Groups(['read:techno'])]
     private $projects;
 
     public function __construct()

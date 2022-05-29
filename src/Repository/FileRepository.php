@@ -27,6 +27,7 @@ class FileRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    
     public function add(File $entity, bool $flush = false): void
     {
         $this->_em->persist($entity);
@@ -46,6 +47,22 @@ class FileRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+    
+    // SELECT *
+    // FROM file
+    // WHERE
+    //      id NOT IN
+    //          (SELECT overview_id FROM project WHERE overview_id IS NOT null)
+    // AND
+    //      id NOT IN
+    //          (select image_id FROM tool WHERE image_id IS NOT null)
+    // AND
+    //      id NOT IN
+    //          (select image_id FROM techno WHERE image_id IS NOT null)
+    // AND
+    //      id NOT IN
+    //          (select image_id FROM project_image WHERE image_id IS NOT null)
+    //;
 
 //    /**
 //     * @return File[] Returns an array of File objects

@@ -3,30 +3,24 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\GetProjectController;
-use App\Controller\GetProjectsController;
-use App\Controller\ProjectController;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['read:project']],
     collectionOperations: [
         'get'=> [
-            'method' => 'GET',
-            'controller' => GetProjectsController::class,
             'pagination_enabled' => false,
         ],
     ],
     itemOperations: [
-        'get' => [
-            'method' => 'GET',
-            'controller' => GetProjectController::class,
-        ],
+        'get',
     ],
 )]
 class Project
@@ -34,21 +28,26 @@ class Project
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:project','read:techno','read:tool'])]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:project','read:techno','read:tool'])]
     private $name;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['read:project'])]
     private $description;
 
     #[ORM\OneToOne(targetEntity: File::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:project'])]
     private $overview;
 
     #[Assert\Image]
     private $overviewTemp;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: ProjectImage::class, orphanRemoval: true)]
+    #[Groups(['read:project'])]
     private $images;
 
     #[Assert\All([
@@ -56,16 +55,20 @@ class Project
     ])]
     private $imagesTemp;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'date')]
+    #[Groups(['read:project'])]
     private $dateStart;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'date', nullable: true)]
+    #[Groups(['read:project'])]
     private $dateEnd;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['read:project'])]
     private $duration;
 
     #[ORM\ManyToMany(targetEntity: Techno::class, inversedBy: 'projects')]
+    #[Groups(['read:project'])]
     private $technos;
 
     #[Assert\All([
@@ -74,6 +77,7 @@ class Project
     private $technosTemp = [];
 
     #[ORM\ManyToMany(targetEntity: Tool::class, inversedBy: 'projects')]
+    #[Groups(['read:project'])]
     private $tools;
 
     #[Assert\All([
@@ -86,6 +90,8 @@ class Project
         $this->images = new ArrayCollection();
         $this->technos = new ArrayCollection();
         $this->tools = new ArrayCollection();
+        $this->dateEnd = null;
+        $this->dateStart = new \DateTime();
     }
 
     public function getId(): ?int

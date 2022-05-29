@@ -221,6 +221,7 @@ class ProjectController extends AbstractController
 
                 if ($project->getOverview() != null) {
                     unlink($project->getOverview()->getPath());
+                    $entityManager->remove($project->getOverview());
                 }
 
                 $project->setOverview($imageOverview);
@@ -259,7 +260,8 @@ class ProjectController extends AbstractController
         }
 
         unlink($projectOverview);
-        $project->setOverview(null);
+        $entityManager->remove($project->getOverview());
+//        $project->setOverview(null);
 
         $entityManager->persist($project);
         $entityManager->flush();
@@ -299,7 +301,9 @@ class ProjectController extends AbstractController
 //        }
 //
         unlink($imagePath);
+        $entityManager->remove($imageProject);
         $project->removeImage($imageProject);
+
 
         $entityManager->persist($project);
         $entityManager->flush();
@@ -307,10 +311,6 @@ class ProjectController extends AbstractController
         return  $this->redirectToRoute('app_project_modification', [
             'projectId' => $project->getId(),
         ], 307);
-    }
-
-    static public function getProject(int $id): int {
-        return $id;
     }
 
 }

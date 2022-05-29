@@ -3,29 +3,24 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\GetToolController;
-use App\Controller\GetToolsController;
 use App\Repository\ToolRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ToolRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['read:tool']],
     collectionOperations: [
         'get' => [
-            'method' => 'GET',
-            'controller' => GetToolsController::class,
             'pagination_enabled' => false,
         ],
     ],
     itemOperations: [
-        'get' => [
-            'method' => 'GET',
-            'controller' => GetToolController::class,
-        ],
+        'get',
     ],
 )]
 class Tool
@@ -33,21 +28,26 @@ class Tool
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:project','read:tool'])]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:project','read:tool'])]
     private $name;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['read:project','read:tool'])]
     private $description;
 
     #[ORM\OneToOne(targetEntity: File::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:project','read:tool'])]
     private $image;
 
     #[Assert\Image]
     private $imageTemp;
 
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'tools')]
+    #[Groups(['read:tool'])]
     private $projects;
 
     public function __construct()
