@@ -50,9 +50,6 @@ class Project
     #[Groups(['read:project'])]
     private $images;
 
-    #[Assert\All([
-        new Assert\Image,
-    ])]
     private $imagesTemp;
 
     #[ORM\Column(type: 'date')]
@@ -71,18 +68,12 @@ class Project
     #[Groups(['read:project'])]
     private $technos;
 
-    #[Assert\All([
-        new Assert\Type(Techno::class),
-    ])]
     private $technosTemp = [];
 
     #[ORM\ManyToMany(targetEntity: Tool::class, inversedBy: 'projects')]
     #[Groups(['read:project'])]
     private $tools;
 
-    #[Assert\All([
-        new Assert\Type(Tool::class),
-    ])]
     private $toolsTemp = [];
 
     public function __construct()
