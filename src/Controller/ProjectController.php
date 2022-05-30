@@ -223,8 +223,8 @@ class ProjectController extends AbstractController
                     unlink($project->getOverview()->getPath());
                     $entityManager->remove($project->getOverview());
                 }
-
                 $project->setOverview($imageOverview);
+                $entityManager->persist($imageOverview);
             }
 
             $entityManager->persist($project);
@@ -261,7 +261,7 @@ class ProjectController extends AbstractController
 
         unlink($projectOverview);
         $entityManager->remove($project->getOverview());
-//        $project->setOverview(null);
+        $project->setOverview(null);
 
         $entityManager->persist($project);
         $entityManager->flush();
