@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tool List{% endblock %}
+
+{% block body %}
+    <div class="flex-row">
+        {% if tools is defined and tools is not empty %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tool Name</th>
+                    <th scope="col">Tool Image</th>
+                    <th scope="col">Tool Description</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for tool in tools %}
+                        <tr>
+                            <th scope="row">{{ tool.id }}</th>
+                            <td>{{ tool.name }}</td>
+                            <td>
+                                <img class="img-fluid" style="max-width: 200px" src="
+                                    {% if tool.image is not null %}
+                                        {{asset(tool.image.path)}}
+                                    {% else %}
+                                        {{asset(imageNull)}}
+                                    {% endif %}
+                                " alt="img"/>
+                            </td>
+                            <td>{{ tool.description }}</td>
+                            <td>
+                                <form method="post" action="{{path('app_tool_modification')}}">
+                                    <button class="btn btn-primary" type="submit" name="toolId" value="{{ tool.id }}">Modifier</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

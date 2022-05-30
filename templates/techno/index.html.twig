@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Techno List{% endblock %}
+
+{% block body %}
+    <div class="flex-row">
+        {% if technos is defined and technos is not empty %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Techno Name</th>
+                    <th scope="col">Techno Image</th>
+                    <th scope="col">Techno Description</th>
+                    <th scope="col">Techno Mastery</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for techno in technos %}
+                    <tr>
+                        <th scope="row">{{ techno.id }}</th>
+                        <td>{{ techno.name }}</td>
+                        <td>
+                            <img class="img-fluid" style="max-width: 200px" src="
+                                    {% if techno.image is not null %}
+                                        {{asset(techno.image.path)}}
+                                    {% else %}
+                                        {{asset(imageNull)}}
+                                    {% endif %}
+                                " alt="img"/>
+                        </td>
+                        <td style="max-width: 500px">
+                            <p class="px-3">
+                                {{ techno.description }}
+                            </p>
+                        </td>
+                        <td>
+                            <div class="d-flex px-2 flex-column">
+                                <label>{{ techno.mastery }}%</label>
+                                <progress max="100" value="{{ techno.mastery }}"> {{ techno.mastery }}% </progress>
+                            </div>
+                        </td>
+                        <td>
+                            <form method="post" action="{{path('app_techno_modification')}}">
+                                <button class="btn btn-primary" type="submit" name="technoId" value="{{ techno.id }}">Modifier</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
